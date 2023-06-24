@@ -20,6 +20,7 @@ import Hint.Monad
 import Hint.Lambda
 import Hint.Bracket
 import Hint.Fixities
+import Hint.MagicNumber
 import Hint.Naming
 import Hint.Pattern
 import Hint.Import
@@ -40,7 +41,7 @@ data HintBuiltin =
     HintList | HintListRec | HintMonad | HintLambda | HintFixities |
     HintBracket | HintNaming | HintPattern | HintImport | HintExport |
     HintPragma | HintExtensions | HintUnsafe | HintDuplicate | HintRestrict |
-    HintComment | HintNewType | HintSmell | HintNumLiteral
+    HintComment | HintNewType | HintSmell | HintNumLiteral | HintMagicNumber
     deriving (Show,Eq,Ord,Bounded,Enum)
 
 -- See https://github.com/ndmitchell/hlint/issues/1150 - Duplicate is too slow
@@ -49,25 +50,26 @@ issue1150 = True
 
 builtin :: HintBuiltin -> Hint
 builtin x = case x of
-    HintLambda     -> decl lambdaHint
-    HintImport     -> modu importHint
-    HintExport     -> modu exportHint
-    HintComment    -> modu commentHint
-    HintPragma     -> modu pragmaHint
-    HintDuplicate  -> if issue1150 then mempty else mods duplicateHint
-    HintRestrict   -> mempty{hintModule=restrictHint}
-    HintList       -> decl listHint
-    HintNewType    -> decl newtypeHint
-    HintUnsafe     -> decl unsafeHint
-    HintListRec    -> decl listRecHint
-    HintNaming     -> decl namingHint
-    HintBracket    -> decl bracketHint
-    HintFixities   -> mempty{hintDecl=fixitiesHint}
-    HintSmell      -> mempty{hintDecl=smellHint,hintModule=smellModuleHint}
-    HintPattern    -> decl patternHint
-    HintMonad      -> decl monadHint
-    HintExtensions -> modu extensionsHint
-    HintNumLiteral -> decl numLiteralHint
+    HintLambda      -> decl lambdaHint
+    HintImport      -> modu importHint
+    HintExport      -> modu exportHint
+    HintComment     -> modu commentHint
+    HintPragma      -> modu pragmaHint
+    HintDuplicate   -> if issue1150 then mempty else mods duplicateHint
+    HintRestrict    -> mempty{hintModule=restrictHint}
+    HintList        -> decl listHint
+    HintNewType     -> decl newtypeHint
+    HintUnsafe      -> decl unsafeHint
+    HintListRec     -> decl listRecHint
+    HintNaming      -> decl namingHint
+    HintBracket     -> decl bracketHint
+    HintFixities    -> mempty{hintDecl=fixitiesHint}
+    HintSmell       -> mempty{hintDecl=smellHint,hintModule=smellModuleHint}
+    HintPattern     -> decl patternHint
+    HintMonad       -> decl monadHint
+    HintExtensions  -> modu extensionsHint
+    HintNumLiteral  -> decl numLiteralHint
+    HintMagicNumber -> decl magicNumberHint
     where
         wrap = timed "Hint" (drop 4 $ show x) . forceList
         decl f = mempty{hintDecl=const $ \a b c -> wrap $ f a b c}
