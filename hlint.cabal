@@ -156,6 +156,7 @@ library
         Hint.Lambda
         Hint.List
         Hint.ListRec
+        Hint.MagicNumber
         Hint.Match
         Hint.Monad
         Hint.Naming
@@ -171,7 +172,7 @@ library
         Test.Annotations
         Test.InputOutput
         Test.Util
-    ghc-options: -Wunused-binds -Wunused-imports -Worphans -Wprepositive-qualified-module
+    ghc-options: -Wall
 
 
 executable hlint
