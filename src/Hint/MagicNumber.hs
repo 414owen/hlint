@@ -95,6 +95,8 @@ warnMagicArithSeqNum a = case a of
   FromTo n m -> warnComplexMagicNums [n, m]
   FromThenTo n m o -> warnComplexMagicNums [n, m, o]
 
+-- These cases are listed explicitly so that GHC will warn us if we're
+-- missing a case, for example when the AST is updated.
 warnMagicNum :: LHsExpr GhcPs -> [Idea]
 warnMagicNum (L _ expr) = case expr of
   HsVar{} -> []
